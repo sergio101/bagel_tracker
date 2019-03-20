@@ -68,8 +68,8 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :bagel_tracker, BagelTracker.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "sergio",
+  password: "",
   database: "bagel_tracker_dev",
   hostname: "localhost",
   pool_size: 10
