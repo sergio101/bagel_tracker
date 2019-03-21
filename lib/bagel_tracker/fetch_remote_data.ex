@@ -1,11 +1,11 @@
-defmodule FetchRemoteData do
+defmodule BagelTracker.FetchRemoteData do
   @moduledoc """
 
   Fetches raw data from the server. parses it, and sends back a list of tuples of
   {artist, play_count)
 
   """
-
+  alias BagelTracker.RawDataEntry
 
   @doc """
    Runs all functions and returns the list of tuples
@@ -13,8 +13,9 @@ defmodule FetchRemoteData do
   def fetch_data() do
     'http://somafm.com/bagel/allartists.inc'
     |> get_html_data()
-    |> process_html_data
-    |> parse_data_list
+    |> check_or_insert_data
+#    |> process_html_data()
+#    |> parse_data_list()
   end
 
   @doc """
@@ -24,6 +25,16 @@ defmodule FetchRemoteData do
     resp = :httpc.request(:get, {url, []}, [], [])
     {:ok, {{'HTTP/1.1', 200, 'OK'}, _headers, body}} = resp
     body
+  end
+
+  def check_or_insert_data(body_data) do
+    hash = :crypto.hash(:md5 , body_data) |> Base.encode16()
+    case RawDataEntry.find_by_hash(hash) do
+      [] -> BagelTracker.Repo.insert(%RawDataEntry{hash: hash,
+        fetched_date: NaiveDateTime.truncate(NaiveDateTime.utc_now, :second),
+        raw_data: List.to_string(body_data)})
+      _ -> {:ok, :record_exists}
+    end
   end
 
   @doc """

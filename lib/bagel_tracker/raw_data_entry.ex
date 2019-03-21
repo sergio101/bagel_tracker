@@ -31,13 +31,18 @@ defmodule BagelTracker.RawDataEntry do
     Checks to see if a record exists using the hash of the data
     If it doesn't, it inserts the record.
   """
-  def find_or_insert_by_hash(hash, params) do
-    query = from(d in "raw_data_entries", select: d.hash, where: d.hash == ^hash )
-    record = Repo.all(query)
-    if !List.first(record) do
-      IO.puts("about to insert a record")
-    else
-      IO.puts("record exists")
-    end
+  def find_by_hash(hash) do
+        query = from(d in "raw_data_entries", select: d.hash, where: d.hash == ^hash )
+        record = Repo.all(query)
   end
+#  def find_or_insert_by_hash(data_entry) do
+#    query = from(d in "raw_data_entries", select: d.hash, where: d.hash == ^hash )
+#    record = Repo.all(query)
+#    if !List.first(record) do
+#      IO.inspect()
+#      IO.puts("about to insert a record")
+#    else
+#      IO.puts("record exists")
+#    end
+#  end
 end

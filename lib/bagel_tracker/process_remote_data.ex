@@ -1,4 +1,4 @@
-defmodule ProcessRemoteData do
+defmodule BagelTracker.ProcessRemoteData do
   @moduledoc """
     This file processes the remote data. It takes a list of tuples, and creates:
 
