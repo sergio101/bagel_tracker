@@ -45,7 +45,9 @@ defmodule BagelTracker.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:earmark, "~> 1.2", only: :dev},
       {:ex_doc, "~> 0.19", only: :dev},
-      {:floki, "~> 0.20.0"}
+      {:floki, "~> 0.20.0"},
+      {:httpoison, "~> 1.4"},
+      {:poison, "~> 3.1"}
     ]
   end
 
