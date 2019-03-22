@@ -5,6 +5,7 @@ defmodule BagelTracker.Artist do
   import Ecto.Repo
 
   alias BagelTracker.Repo
+  alias BagelTracker.Artist
 
   schema "artists" do
     field :bit_id, :string
@@ -28,6 +29,14 @@ defmodule BagelTracker.Artist do
   def find_by_mbid(mbid_entry) do
     query = from(a in "artists", select: a.mbid, where: a.mbid == ^mbid_entry )
     record = Repo.all(query)
+  end
+
+  def find_or_create_by_name(artist_name) do
+    query = from(a in "artists", select: a.mbid, where: a.name == ^artist_name )
+    case Repo.all(query) do
+      [] -> Repo.insert(%Artist{name: artist_name})
+      _ -> {:ok, :data_exists}
+    end
   end
 
 

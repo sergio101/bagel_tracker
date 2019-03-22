@@ -9,6 +9,7 @@ defmodule BagelTracker.ProcessRemoteData do
   """
 
   alias BagelTracker.FetchRemoteData
+  alias BagelTracker.Artist
 
   @doc """
     Takes the data in the list, and performs each processing step on it.
@@ -23,9 +24,11 @@ defmodule BagelTracker.ProcessRemoteData do
   end
 
   def update_artists({:ok, data_list} = data) do
-    IO.puts("about to output data list")
-    IO.inspect data_list
-
+    for entry <- data_list do
+      {artist_name, play_count} = entry
+      Artist.find_or_create_by_name(artist_name)
+    end
   end
+
 
 end
