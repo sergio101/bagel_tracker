@@ -12,7 +12,8 @@ defmodule BagelTracker.ProcessRemoteData do
   alias BagelTracker.Artist
 
   @doc """
-    Takes the data in the list, and performs each processing step on it.
+    This is the entry point of this module.
+  Takes the data in the list, and performs each processing step on it.
   """
 
   def process_data() do

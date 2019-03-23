@@ -11,16 +11,24 @@ defmodule BandsInTownAPI do
     set as an environment variable.
   """
   def fetch_artist_info(artist_name) do
-    api_path = "#{@rest_url}/artists/#{URI.encode(String.replace(artist_name,"/","%2F"))}?app_id=#{@api_key}"
-    IO.inspect URI.encode(artist_name)
-    case HTTPoison.get(api_path) do
-      {:ok, %{body: raw}} -> raw |> parse_data()
-      {:error, %{reason: reason} } -> {:error, reason}
-    end
+    "#{@rest_url}/artists/#{URI.encode(String.replace(artist_name,"/","%252F"))}?app_id=#{@api_key}"
+    |> get_api_data
+  end
+
+  def fetch_event_info(artist_name) do
+    "#{@rest_url}/artists/#{URI.encode(String.replace(artist_name,"/","%252F"))}/events?app_id=#{@api_key}"
+    |> get_api_data
   end
 
   def parse_data(body_data) do
     Poison.decode(body_data, keys: :atoms)
+  end
+
+  def get_api_data(path) do
+    case HTTPoison.get(path) do
+      {:ok, %{body: raw}} -> raw |> parse_data()
+      {:error, %{reason: reason} } -> {:error, reason}
+    end
   end
 
 end
