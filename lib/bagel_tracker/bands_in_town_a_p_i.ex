@@ -11,7 +11,8 @@ defmodule BandsInTownAPI do
     set as an environment variable.
   """
   def fetch_artist_info(artist_name) do
-    api_path = "#{@rest_url}/artists/#{artist_name}?app_id=#{@api_key}"
+    api_path = "#{@rest_url}/artists/#{URI.encode(String.replace(artist_name,"/","%2F"))}?app_id=#{@api_key}"
+    IO.inspect URI.encode(artist_name)
     case HTTPoison.get(api_path) do
       {:ok, %{body: raw}} -> raw |> parse_data()
       {:error, %{reason: reason} } -> {:error, reason}
