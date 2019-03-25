@@ -6,6 +6,7 @@ defmodule BagelTracker.Artist do
 
   alias BagelTracker.Repo
   alias BagelTracker.Artist
+  alias BagelTracker.Event
 
   schema "artists" do
     field :bit_id, :string
@@ -15,6 +16,7 @@ defmodule BagelTracker.Artist do
     field :name, :string
     field :thumb_url, :string
     field :url, :string
+    has_many :events, Event
 
     timestamps()
   end
@@ -37,7 +39,7 @@ defmodule BagelTracker.Artist do
   end
 
   @doc """
-  This is the entry point of hte function. This will update any artsist that do not
+  This is the entry point of hte function. This will update any artist that do not
   have any BIT info.
   """
 
@@ -51,14 +53,19 @@ defmodule BagelTracker.Artist do
 
   def update_artist(artist) do
     {:ok, artist_info} = BandsInTownAPI.fetch_artist_info(artist.name)
-    IO.puts "+++"
-    IO.inspect artist_info
-    IO.puts "+++"
     case artist_info do
       %{error: "Not Found"} -> {:ok, :artist_doesnt_exist}
       "" -> {:ok, :blank_returned}
       _ -> Repo.update(changeset(artist,  artist_info |> Map.put(:bit_id, artist_info.id)))
     end
+  end
+
+  @doc """
+    Gets artists that have an entry in the database. This assures that they exists.
+  """
+  def get_active_artists do
+    query = from(a in "artists", where: not(is_nil(a.bit_id)))
+    Repo.all(query)
   end
 
 end
