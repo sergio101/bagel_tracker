@@ -30,7 +30,7 @@ defmodule BagelTracker.FetchRemoteData do
     case RawDataEntry.find_by_hash(hash) do
       [] -> BagelTracker.Repo.insert(%RawDataEntry{hash: hash,
         fetched_date: NaiveDateTime.truncate(NaiveDateTime.utc_now, :second),
-        raw_data: List.to_string(body_data)}) |> process_html_data |> parse_data_list
+        raw_data: List.to_string(body_data)}) #  |> process_html_data |> parse_data_list
       _ -> {:ok, :record_exists}
     end
   end
@@ -39,7 +39,7 @@ defmodule BagelTracker.FetchRemoteData do
     takes the html list and returns a set of tuples.
   """
   def process_html_data(raw_data_record) do
-    {:ok, %BagelTracker.RawDataEntry{raw_data: html}} = raw_data_record
+    %BagelTracker.RawDataEntry{raw_data: html} = raw_data_record
     {"ol", [], entries } = Floki.parse(html)
     for entry <- entries do
       {"li", [], [data]} = entry
@@ -55,7 +55,7 @@ defmodule BagelTracker.FetchRemoteData do
     [ _, artist, play_count] = Regex.run(~r/(.*?)\s*\((.*?)\)/, entry)
     {artist, String.to_integer(play_count)}
     end
-    {:ok, results}
+    results
   end
 
 end

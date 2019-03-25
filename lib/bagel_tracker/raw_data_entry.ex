@@ -40,4 +40,10 @@ defmodule BagelTracker.RawDataEntry do
 
   end
 
+  def clear_processed_dates() do
+    for item <- Repo.all(RawDataEntry) do
+      Repo.update(RawDataEntry.changeset(item, %{processed_date: nil}))
+    end
+  end
+
 end

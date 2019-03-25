@@ -11,20 +11,8 @@ defmodule BagelTracker.ProcessRemoteData do
   alias BagelTracker.FetchRemoteData
   alias BagelTracker.Artist
 
-  @doc """
-    This is the entry point of this module.
-  Takes the data in the list, and performs each processing step on it.
-  """
 
-  def process_data() do
-    data = FetchRemoteData.fetch_data()
-    case  data do
-      {:ok, :record_exists} -> {:ok, :no_processing_required}
-      _ -> update_artists(data)
-    end
-  end
-
-  def update_artists({:ok, data_list} = data) do
+  def update_artists(data_list) do
     for entry <- data_list do
       {artist_name, play_count} = entry
       Artist.find_or_create_by_name(artist_name)
