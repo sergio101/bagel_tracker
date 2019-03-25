@@ -1,8 +1,10 @@
 defmodule BagelTracker.Event do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   alias BagelTracker.Artist
+  alias BagelTracker.Repo
 
   schema "events" do
     field :bit_id, :string
@@ -14,7 +16,7 @@ defmodule BagelTracker.Event do
 
     timestamps()
   end
-  
+
   @doc false
   def changeset(event, attrs) do
     event
@@ -32,7 +34,19 @@ defmodule BagelTracker.Event do
   @doc """
     imports new events from BIT
   """
-  def import_new_events() do
+  def import_new_events(artist_name) do
+    remote_event = BandsInTownAPI.fetch_event_info(artist_name)
+    case remote_event do
+      {:ok, events} -> process_remote_events(events)
+    end
+  end
 
+  def process_remote_events(remote_events) do
+    for event <- remote_events do
+      query = from e in "events", select: e.id, where: e.bit_id == ^event.id
+      case Repo.all(query) do
+        [] -> IO.puts "about to insert new event id #{event.id}"
+      end
+    end
   end
 end
