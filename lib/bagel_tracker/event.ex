@@ -5,6 +5,7 @@ defmodule BagelTracker.Event do
 
   alias BagelTracker.Artist
   alias BagelTracker.Repo
+  alias BagelTracker.Event
 
   schema "events" do
     field :bit_id, :string
@@ -45,8 +46,14 @@ defmodule BagelTracker.Event do
     for event <- remote_events do
       query = from e in "events", select: e.id, where: e.bit_id == ^event.id
       case Repo.all(query) do
-        [] -> IO.puts "about to insert new event id #{event.id}"
+        [] -> insert_new_event(event)
       end
     end
+  end
+
+  def insert_new_event(event) do
+    IO.inspect event
+    IO.inspect Repo.one(from a in "artists", select: a.id, where: a.bit_id == ^event.artist_id)
+    # event_record = %Event{bit_id: event.id}
   end
 end
