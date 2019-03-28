@@ -13,6 +13,7 @@ defmodule UpdateSiteData do
   alias BagelTracker.RawDataEntry
   alias BagelTracker.FetchRemoteData
   alias BagelTracker.ProcessRemoteData
+  alias BagelTracker.Event
 
   @doc"""
     First, Gather up the raw data that has not been processed yet.
@@ -25,7 +26,7 @@ defmodule UpdateSiteData do
     end
     IO.puts "Starting second phase of updates"
     BagelTracker.Artist.check_remote_data()
-    # BagelTracker.Events.import_remote_events()
+    BagelTracker.Event.import_remote_events()
   end
 
   def process_data_entries(items) do
