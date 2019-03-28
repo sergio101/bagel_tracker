@@ -11,7 +11,7 @@ defmodule BandsInTownAPI do
     set as an environment variable.
   """
   def fetch_artist_info(artist_name) do
-    "#{@rest_url}/artists/#{URI.encode(String.replace(artist_name,"/","%252F"))}?app_id=#{@api_key}"
+    "#{@rest_url}/artists/#{URI.encode(String.replace(artist_name,"/","%252F") |> String.replace("?", "%253F"))}?app_id=#{@api_key}"
     |> get_api_data
   end
 

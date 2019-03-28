@@ -24,16 +24,20 @@ defmodule BagelTracker.Artist do
   @doc """
     This is where we store the artists
   """
-  def changeset(artist, attrs) do
-    artist
-    |> cast(attrs, [:facebook_page_url, :bit_id, :image_url, :mbid, :name, :thumb_url, :url])
-    |> validate_required([:name])
-  end
+    def changeset(artist, attrs) do
+      artist
+      |> cast(attrs, [:facebook_page_url, :bit_id, :image_url, :mbid, :name, :thumb_url, :url])
+      |> validate_required([:name])
+      |> unique_constraint(:name)
+      |> unique_constraint(:bit_id)
+
+    end
 
   def find_or_create_by_name(artist_name) do
-    query = from(a in "artists", select: a.mbid, where: a.name == ^artist_name )
+    name = String.trim(artist_name)
+    query = from(a in Artist, where: a.name == ^name )
     case Repo.all(query) do
-      [] -> Repo.insert(%Artist{name: artist_name})
+      [] -> Repo.insert(%Artist{name: name})
       _ -> {:ok, :data_exists}
     end
   end
@@ -44,19 +48,20 @@ defmodule BagelTracker.Artist do
   """
 
   def check_remote_data do
-    query = from(a in "artists", select: a.id, where: is_nil(a.bit_id) )
-    for id <- Repo.all(query) do
-      artist = Repo.get(Artist, id)
+    query = from(a in Artist, where: is_nil(a.bit_id) )
+    for artist<- Repo.all(query) do
       update_artist(artist)
     end
   end
 
   def update_artist(artist) do
+    IO.puts artist.name
     {:ok, artist_info} = BandsInTownAPI.fetch_artist_info(artist.name)
-    case artist_info do
+    case  artist_info do
+
       %{error: "Not Found"} -> {:ok, :artist_doesnt_exist}
       "" -> {:ok, :blank_returned}
-      _ -> Repo.update(changeset(artist,  artist_info |> Map.put(:bit_id, artist_info.id)))
+      artist_info -> Repo.update(changeset(artist,  artist_info |> Map.put(:bit_id, artist_info.id)))
     end
   end
 

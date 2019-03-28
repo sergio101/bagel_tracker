@@ -11,7 +11,7 @@ defmodule BagelTracker.Event do
     field :bit_id, :string
     field :datetime, :naive_datetime
     field :description, :string
-    field :lineup, :string
+    field :lineup, {:array, :string}
     field :url, :string
     belongs_to :artist, Artist
 
@@ -23,13 +23,7 @@ defmodule BagelTracker.Event do
     event
     |> cast(attrs, [:artist_id, :datetime, :description, :bit_id, :lineup, :url])
     |> validate_required([:artist_id, :datetime, :description, :bit_id, :lineup, :url])
-  end
-
-  @doc """
-    Gets all events that are scheduled for a week out.
-  """
-  def get_upcoming_events do
-
+    |> unique_constraint(:bit_id)
   end
 
   @doc """
@@ -44,16 +38,11 @@ defmodule BagelTracker.Event do
 
   def process_remote_events(remote_events) do
     for event <- remote_events do
-      query = from e in "events", select: e.id, where: e.bit_id == ^event.id
-      case Repo.all(query) do
-        [] -> insert_new_event(event)
-      end
+      artist_id = Repo.one(from a in Artist, select: a.id, where: a.bit_id == ^event.artist_id)
+      {:ok, date_time} =  NaiveDateTime.from_iso8601(event.datetime)
+      data_struct = struct(Event, %{ event | id: nil, artist_id: artist_id, datetime: date_time})
+      Repo.insert(data_struct)
     end
   end
-
-  def insert_new_event(event) do
-    IO.inspect event
-    IO.inspect Repo.one(from a in "artists", select: a.id, where: a.bit_id == ^event.artist_id)
-    # event_record = %Event{bit_id: event.id}
-  end
+  
 end

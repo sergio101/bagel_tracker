@@ -23,7 +23,9 @@ defmodule UpdateSiteData do
       [] -> {:ok, :no_data_to_update}
       items -> process_data_entries(items)
     end
-
+    IO.puts "Starting second phase of updates"
+    BagelTracker.Artist.check_remote_data()
+    # BagelTracker.Events.import_remote_events()
   end
 
   def process_data_entries(items) do
