@@ -76,7 +76,11 @@ defmodule BagelTracker.Event do
   def events_for_distance(geo_point, radius) do
      query = from(e in Event, where: e.datetime > ^(Timex.now |> Timex.shift(days: -7)), preload: :venue )
      events = Repo.all(query)
-     Enum.filter(events, fn(x) -> Distance.GreatCircle.distance(geo_point,{x.venue.longitude, x.venue.latitude}) <= radius * 1609.34 end)
+     Enum.filter(events, fn(x) ->
+       Distance.GreatCircle.distance(
+         Map.values(geo_point) |> Enum.reverse() |> List.to_tuple,
+         {x.venue.longitude, x.venue.latitude})
+       <= radius * 1609.34 end)
   end
 
 

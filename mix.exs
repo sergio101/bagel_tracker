@@ -49,7 +49,8 @@ defmodule BagelTracker.MixProject do
       {:httpoison, "~> 1.4"},
       {:poison, "~> 3.1"},
       {:distance, "~> 0.2.1"},
-      {:timex, "~> 3.1"}
+      {:timex, "~> 3.1"},
+      {:google_geocoding_api, "~> 0.1.4"}
     ]
   end
 
