@@ -1,5 +1,6 @@
 defmodule BagelTracker.Event do
   use Ecto.Schema
+  use Timex
   import Ecto.Changeset
   import Ecto.Query
 
@@ -68,8 +69,15 @@ defmodule BagelTracker.Event do
     Repo.insert(venue)
   end
 
-  def string_to_float(string) do
+  defp string_to_float(string) do
     if string, do: String.to_float(string), else: 0.0
   end
+
+  def events_for_distance(geo_point, radius) do
+     query = from(e in Event, where: e.datetime > ^(Timex.now |> Timex.shift(days: -7)), preload: :venue )
+     events = Repo.all(query)
+     Enum.filter(events, fn(x) -> Distance.GreatCircle.distance(geo_point,{x.venue.longitude, x.venue.latitude}) <= radius * 1609.34 end)
+  end
+
 
 end

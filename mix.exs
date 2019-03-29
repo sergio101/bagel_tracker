@@ -47,7 +47,9 @@ defmodule BagelTracker.MixProject do
       {:ex_doc, "~> 0.19", only: :dev},
       {:floki, "~> 0.20.0"},
       {:httpoison, "~> 1.4"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:distance, "~> 0.2.1"},
+      {:timex, "~> 3.1"}
     ]
   end
 
