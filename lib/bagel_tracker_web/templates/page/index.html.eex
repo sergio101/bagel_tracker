@@ -19,25 +19,29 @@
 </section>
 <div class="divider"></div>
 <section>
-<div class="row">
-    <%= form_for @conn, Routes.page_path(@conn, :process_search), [name: :search], fn f -> %>
+    <div class="row">
+        <%= form_for @conn, Routes.page_path(@conn, :process_search), [name: :search], fn f -> %>
         <div class="row">
             <div class="input-field col s6">
                 <%= text_input f, :search_term, [required: ""] %>
                 <label for="first_name">Location</label>
             </div>
-  <div class="input-field col s3">
-    <%= select f, :range, [10, 25, 50, 75, 100, 250] %>
-    <label>Select Distance in Miles</label>
-  </div>
-  <div class="input-field col s3">
-    <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-      <i class="fas fa-caret-square-right"></i>
-    </button>
-  </div>
-
+            <div class="input-field col s3">
+                <%= select f, :range, [10, 25, 50, 75, 100, 250] %>
+                <label>Select Distance in Miles</label>
+            </div>
+            <div class="input-field col s3">
+                <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                    <i class="fas fa-caret-square-right"></i>
+                </button>
+            </div>
         </div>
-    <% end %>
-</div>
+        <% end %>
+    </div>
 </section>
-
+<%= if (@conn.request_path == "/process_search") do %>
+<div class="divider"></div>
+<%= for event <- @events do %>
+<p><%= event.description %></p>
+<% end %>
+<% end %>

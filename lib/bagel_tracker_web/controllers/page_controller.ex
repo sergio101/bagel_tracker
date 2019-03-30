@@ -7,13 +7,12 @@ defmodule BagelTrackerWeb.PageController do
     render(conn, "index.html")
   end
 
-  def process_search(conn, params) do
-    if params["search_term"] && params["range"] do
-      events =
-        GoogleGeocodingApi.geo_location(params["search_term"])
-        |> Event.events_for_distance(String.to_integer(params["range"]) )
-      IO.inspect length(events)
-    end
-    render(conn, "index.html")
+  def process_search(conn, %{"search_term" => location, "range" => range}) do
+    IO.inspect conn
+    events =
+      GoogleGeocodingApi.geo_location(location)
+      |> Event.events_for_distance(String.to_integer(range) )
+      IO.puts length(events)
+    render(conn, "index.html", events: events)
   end
 end
