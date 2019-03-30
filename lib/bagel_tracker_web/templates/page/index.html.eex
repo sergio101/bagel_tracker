@@ -23,7 +23,7 @@
     <%= form_for @conn, Routes.page_path(@conn, :process_search), [name: :search], fn f -> %>
         <div class="row">
             <div class="input-field col s6">
-                <%= text_input f, :search_term %>
+                <%= text_input f, :search_term, [required: ""] %>
                 <label for="first_name">Location</label>
             </div>
   <div class="input-field col s3">
