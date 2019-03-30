@@ -17,6 +17,7 @@ defmodule BagelTrackerWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/process_search", PageController, :process_search
   end
 
   # Other scopes may use custom stacks.
