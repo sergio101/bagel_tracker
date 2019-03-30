@@ -52,6 +52,7 @@ defmodule BagelTracker.FetchRemoteData do
   """
   def parse_data_list(data_list) do
     results = for entry <- data_list do
+      IO.puts entry
     [ _, artist, play_count] = Regex.run(~r/(.*?)\s*\((.*?)\)/, entry)
     {artist, String.to_integer(play_count)}
     end
