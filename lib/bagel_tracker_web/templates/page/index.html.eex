@@ -51,9 +51,9 @@
           <a href="<%= event.url%>" target="_blank">
             <%= Enum.join [event.datetime.year, event.datetime.month, event.datetime.day], "/" %>
           </a>
-          - <a href="<%= event.artist.url %>" target="_blank"><%= event.artist.name %></a>
-          - <%= event.venue.name %>
-          - <%= event.venue.city %>, <%= event.venue.region %>
+           - <a href="<%= event.artist.url %>" target="_blank"><%= event.artist.name %></a>
+           - <%= event.venue.name %>
+           - <%= event.venue.city %>, <%= event.venue.region %>
         </div>
         <div class="collapsible-body">
         <div>
