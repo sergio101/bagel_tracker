@@ -55,7 +55,6 @@ defmodule BagelTracker.Artist do
   end
 
   def update_artist(artist) do
-    IO.puts artist.name
     {:ok, artist_info} = BandsInTownAPI.fetch_artist_info(artist.name)
     case  artist_info do
 

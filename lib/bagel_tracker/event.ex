@@ -64,7 +64,6 @@ defmodule BagelTracker.Event do
     data = venue_data
            |> Map.put(:longitude, string_to_float(venue_data[:longitude]))
            |> Map.put(:latitude, string_to_float(venue_data[:latitude]))
-    IO.inspect data
     venue = Ecto.build_assoc(new_event, :venue, data)
     Repo.insert(venue)
   end
