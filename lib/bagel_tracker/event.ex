@@ -25,7 +25,7 @@ defmodule BagelTracker.Event do
   def changeset(event, attrs) do
     event
     |> cast(attrs, [:artist_id, :datetime, :description, :bitid, :lineup, :url])
-    |> validate_required([:artist_id, :datetime, :description, :bitid, :lineup, :url])
+    |> validate_required([:artist_id, :datetime, :bitid, :lineup, :url])
     |> unique_constraint(:bitid, name: :events_bitid_index)
   end
 
@@ -44,9 +44,10 @@ defmodule BagelTracker.Event do
       artist_id = Repo.one(from a in Artist, select: a.id, where: a.bit_id == ^event.artist_id)
       {:ok, date_time} =  NaiveDateTime.from_iso8601(event.datetime)
       data_struct = %{ event | artist_id: artist_id, datetime: date_time, id: nil} |> Map.put(:bitid, event.id)
-      case Repo.insert(changeset(%Event{},data_struct)) do
+      changeset = changeset(%Event{},data_struct)
+      case Repo.insert(changeset) do
         {:ok, new_event } -> add_venue(data_struct, new_event)
-        {:error, _ } -> {:error, :error_inserting_record}
+        {:error, error } -> {:error, :could_not_insert}
       end
     end
   end
