@@ -72,3 +72,31 @@
     </ul>
     <% end %>
   </div>
+
+        <footer class="page-footer">
+        <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+                        <h5 class="white-text">Technology Enlisted</h5>
+                        <p class="grey-text text-lighten-4">This site was built using the following technologies</p>
+                      </div>
+                      <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Links</h5>
+                        <ul>
+                          <li><a class="grey-text text-lighten-3" href="https://www.bandsintown.com" target="_blank">Bands in Town</a></li>
+                          <li><a class="grey-text text-lighten-3" href="https://phoenixframework.org"target="_blank"Phoenix Web Framework</a></li>
+                          <li><a class="grey-text text-lighten-3" href="https://elixir-lang.org"target="_blank">Elixir Programming Language</a></li>
+                          <li><a class="grey-text text-lighten-3" href="http://www.wolfram.com/mathematica/?source=nav"target="_blank">Mathematica/Wolfram Langauge</a></li>
+                        </ul>
+                      </div>
+                      </div>
+                      </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2019 Bagel Concert Finder
+            <%= for stat <- @stats do %>
+            <span class="grey-text text-lighten-4 right" href="#!"> <%= stat.name %>: <%= stat.value %>&nbsp;</span>
+            <%= end %>
+            </div>
+          </div>
+        </footer>

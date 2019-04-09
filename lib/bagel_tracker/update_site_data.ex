@@ -27,6 +27,7 @@ defmodule UpdateSiteData do
     IO.puts "Starting second phase of updates"
     BagelTracker.Artist.check_remote_data()
     BagelTracker.Event.import_remote_events()
+    BagelTracker.Statistic.update_counts();
   end
 
   def process_data_entries(items) do
