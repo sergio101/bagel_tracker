@@ -28,7 +28,7 @@
       <section>
   <nav>
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo">Bagel Radio Concert Finder</a>
+      <a href="/" class="brand-logo">Bagel Radio Concert Finder</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="https://www.amazon.com/hz/wishlist/ls/3L7DM7FMR5OQU?ref_=wl_share" target="_blank">Amazon Wish List</a></li>
         <li><a href="https://twitter.com/sergio_101?lang=en" target="_blank"><i class="fab fa-twitter"></i></a></li>

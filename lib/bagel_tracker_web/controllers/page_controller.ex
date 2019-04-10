@@ -12,7 +12,12 @@ defmodule BagelTrackerWeb.PageController do
     render(conn, "index.html", stats: stats)
   end
 
-  def process_search(conn, %{"search_term" => location, "range" => range}) do
+  def process_search(conn, %{"location" => location, "range" => range}) do
+      redirect(conn, to: "/fetch_concerts/#{location}/#{range}")
+#    render(conn, "index.html", %{events: events, stats: stats})
+  end
+
+  def fetch_concerts(conn, %{"location" => location, "range" => range}) do
     geo_location = GoogleGeocodingApi.geo_location(location)
     stats = Repo.all(Statistic)
     %{"lat" => latitude, "lng" => longitude } = geo_location

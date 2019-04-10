@@ -23,7 +23,7 @@
       <%= form_for @conn, Routes.page_path(@conn, :process_search), [name: :search], fn f -> %>
       <div class="row">
         <div class="input-field col s12 m6">
-          <%= text_input f, :search_term, [required: ""] %>
+          <%= text_input f, :location, [required: ""] %>
           <label for="first_name">Location</label>
         </div>
         <div class="input-field col s6 m3">
@@ -40,11 +40,11 @@
     </div>
   </section>
   <div class="row">
-    <%= if (@conn.request_path == "/process_search") do %>
-    <%= if length(@events) == 0 do %>
+    <%= if assigns[:events] && length(@events) == 0 do %>
     <h5>Sorry, there were no results for your area.</h5>
     <% end %>
-    <ul class="collapsible" >
+    <%= if assigns[:events] do %>
+    <ul class="collapsible " >
       <%= for event <- @events do %>
       <li>
         <div class="collapsible-header">
