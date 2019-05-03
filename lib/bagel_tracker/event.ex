@@ -34,7 +34,10 @@ defmodule BagelTracker.Event do
   """
   def import_new_events(artist_name) do
     remote_event = BandsInTownAPI.fetch_event_info(artist_name)
+    IO.inspect remote_event
     case remote_event do
+      {:ok, %{errorMessage: errorMessage}} -> IO.puts "There were errors"
+      {:error, errors} -> IO.puts "There were errors"
       {:ok, events} -> process_remote_events(events)
     end
   end
