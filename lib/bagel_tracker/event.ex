@@ -48,6 +48,7 @@ defmodule BagelTracker.Event do
       {:ok, date_time} =  NaiveDateTime.from_iso8601(event.datetime)
       data_struct = %{ event | artist_id: artist_id, datetime: date_time, id: nil} |> Map.put(:bitid, event.id)
       changeset = changeset(%Event{},data_struct)
+      IO.inspect changeset
       case Repo.insert(changeset) do
         {:ok, new_event } -> add_venue(data_struct, new_event)
         {:error, error } -> {:error, :could_not_insert}

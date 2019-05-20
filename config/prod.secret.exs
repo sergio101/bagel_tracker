@@ -13,7 +13,7 @@ config :bagel_tracker, BagelTrackerWeb.Endpoint,
 
 # Configure your database
 config :bagel_tracker, BagelTracker.Repo,
-  username: "concert_finder",
-  password: System.get_env("BAGEL_DB_PASSWORD"),
-  database: "bagel_tracker_prod",
-  pool_size: 15
+       username: "concert_finder",
+       password: System.get_env("BAGEL_DB_PASSWORD"),
+       database: "bagel_tracker_prod",
+       pool_size: 15

@@ -31,7 +31,10 @@ defmodule UpdateSiteData do
   end
 
   def process_data_entries(items) do
+
     for item <- items do
+      IO.puts "Here is one item in the entries"
+      IO.inspect item
       item
       |> FetchRemoteData.process_html_data
       |> FetchRemoteData.parse_data_list

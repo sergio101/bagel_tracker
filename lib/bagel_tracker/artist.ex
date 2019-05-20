@@ -16,6 +16,8 @@ defmodule BagelTracker.Artist do
     field :name, :string
     field :thumb_url, :string
     field :url, :string
+    field :alternate_title, :string
+
     has_many :events, Event
 
     timestamps()
