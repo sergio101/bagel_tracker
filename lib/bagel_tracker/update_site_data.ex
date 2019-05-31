@@ -14,6 +14,8 @@ defmodule UpdateSiteData do
   alias BagelTracker.FetchRemoteData
   alias BagelTracker.ProcessRemoteData
   alias BagelTracker.Event
+  alias BagelTracker.Artist
+  alias BagelTracker.Venue
 
   @doc"""
     First, Gather up the raw data that has not been processed yet.
@@ -42,6 +44,12 @@ defmodule UpdateSiteData do
       changeset = RawDataEntry.changeset(item, %{processed_date: NaiveDateTime.truncate(NaiveDateTime.utc_now, :second)})
       Repo.update(changeset)
     end
+  end
+
+  def clear_transient_data() do
+    Repo.delete_all(Artist)
+    Repo.delete_all(Event)
+    Repo.delete_all(Venue)
   end
 
 end

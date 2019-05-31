@@ -78,7 +78,7 @@ defmodule BagelTracker.Event do
   end
 
   def events_for_distance(geo_point, radius) do
-     query = from(e in Event, where: e.datetime > ^(Timex.now |> Timex.shift(days: -7)), preload: [:venue, :artist], order_by: e.datetime )
+     query = from(e in Event, where: e.datetime > ^(Timex.now |> Timex.shift(days: -1)), preload: [:venue, :artist], order_by: e.datetime )
      events = Repo.all(query)
      Enum.filter(events, fn(x) ->
        Distance.GreatCircle.distance(
