@@ -11,9 +11,11 @@ defmodule BagelTracker.Application do
       # Start the Ecto repository
       BagelTracker.Repo,
       # Start the endpoint when the application starts
-      BagelTrackerWeb.Endpoint
+      BagelTrackerWeb.Endpoint,
       # Starts a worker by calling: BagelTracker.Worker.start_link(arg)
       # {BagelTracker.Worker, arg},
+      # Start the PubSub system
+      {Phoenix.PubSub, name: BagelTracker.PubSub}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

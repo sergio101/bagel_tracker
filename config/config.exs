@@ -15,8 +15,7 @@ config :bagel_tracker, BagelTrackerWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "HwDUAOOHMQY5tKYLLZx9LhAXx7lzEP47mg63cIDsPSBkqA32cMSYO5Gn4NsAgcKg",
   render_errors: [view: BagelTrackerWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: BagelTracker.PubSub, adapter: Phoenix.PubSub.PG2]
-
+  pubsub_server: BagelTracker
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
