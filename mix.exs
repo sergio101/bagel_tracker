@@ -50,7 +50,8 @@ defmodule BagelTracker.MixProject do
       {:poison, "~> 3.1"},
       {:distance, "~> 0.2.1"},
       {:timex, "~> 3.1"},
-      {:google_geocoding_api, "~> 0.1.4"}
+      {:google_geocoding_api, "~> 0.1.4"},
+      {:distillery, "~> 2.1"}
     ]
   end
 

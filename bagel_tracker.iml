@@ -99,7 +99,51 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/earmark_parser" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/makeup_erlang" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/cowboy_telemetry" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/artificery" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/distillery" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/idna" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/ranch" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/mimerl" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/gettext" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/metrics" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/connection" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/parse_trans" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/unicode_util_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/ecto" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/mochiweb" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/httpoison" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/cowlib" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/mime" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/floki" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/ssl_verify_fun" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/db_connection" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/tzdata" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/distance" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/phoenix_pubsub" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/cowboy_telemetry" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/jason" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/ecto_sql" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/postgrex" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/hackney" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/html_entities" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/cowboy" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/certifi" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/combine" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/decimal" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/timex" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/poison" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/telemetry" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/phoenix" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/distillery" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/plug_cowboy" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/artificery" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/google_geocoding_api" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/plug" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/plug_crypto" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/phoenix_ecto" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/phoenix_html" />
     </content>
+    <orderEntry type="jdk" jdkName="Elixir 1.11.2" jdkType="Elixir SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="phoenix" level="project" />
     <orderEntry type="library" name="phoenix_pubsub" level="project" />
@@ -168,5 +212,10 @@
     <orderEntry type="library" name="unicode_set" level="project" />
     <orderEntry type="library" name="benchee_markdown" level="project" />
     <orderEntry type="library" name="assert_value" level="project" />
+    <orderEntry type="library" name="distillery" level="project" />
+    <orderEntry type="library" name="artificery" level="project" />
+    <orderEntry type="library" name="eqc_ex" level="project" />
+    <orderEntry type="library" name="ex_unit_clustered_case" level="project" />
+    <orderEntry type="library" name="dialyzex" level="project" />
   </component>
 </module>

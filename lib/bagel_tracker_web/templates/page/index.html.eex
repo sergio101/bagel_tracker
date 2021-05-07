@@ -48,12 +48,10 @@
       <%= for event <- @events do %>
       <li>
         <div class="collapsible-header">
-          <a href="<%= event.url%>" target="_blank">
             <%= Enum.join [event.datetime.year, event.datetime.month, event.datetime.day], "/" %>
-          </a>
-           - <a href="<%= event.artist.url %>" target="_blank"><%= event.artist.name %></a>
+           - <%= event.artist.name %>
            - <%= event.venue.name %>
-           - <%= event.venue.city %>, <%= event.venue.region %>
+           - <%= event.venue.city %>, <%= event.venue.region %>  <a href="<%= event.url%>" target="_blank"><i class="material-icons">exit_to_app</i></a>
         </div>
         <div class="collapsible-body">
         <div>
