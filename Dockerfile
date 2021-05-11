@@ -1,82 +1,54 @@
-# The version of Alpine to use for the final image
-# This should match the version of Alpine that the `elixir:1.7.2-alpine` image uses
-ARG ALPINE_VERSION=3.8
+FROM elixir:1.9.0-alpine AS build
 
-FROM elixir:1.11.4-alpine AS builder
+# install build dependencies
+RUN apk add --no-cache build-base npm git python
 
-# The following are build arguments used to change variable parts of the image.
-# The name of your application/release (required)
-ARG APP_NAME
-# The version of the application we are building (required)
-ARG APP_VSN
-# The environment to build with
-ARG MIX_ENV=prod
-# Set this to true if this release is not a Phoenix app
-ARG SKIP_PHOENIX=false
-# If you are using an umbrella project, you can change this
-# argument to the directory the Phoenix app is in so that the assets
-# can be built
-ARG PHOENIX_SUBDIR=.
+# prepare build dir
+WORKDIR /app
 
-ENV SKIP_PHOENIX=${SKIP_PHOENIX} \
-    APP_NAME=${APP_NAME} \
-    APP_VSN=${APP_VSN} \
-    MIX_ENV=${MIX_ENV}
+# install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
-# By convention, /opt is typically used for applications
-WORKDIR /opt/app
+# set build ENVexport DATABASE_URL=ecto://postres:postgres@localhost/
+ENV MIX_ENV=prod
+#ENV DATABASE_URL="ecto://concert_finder:c34179qvx7najacp@db-postgresql-nyc3-53985-do-user-1826027-0.b.db.ondigitalocean.com:25061/bagel-tracker"
+ENV SECRET_KEY_BASE="skrJe+WcTH0VNh8DYvrKVZQzobu39J68cRfDlg86jtls3ClwD2KC59aGB2lCH1JX"
+ENV BAGEL_DB_PASSWORD="c34179qvx7najacp"
+ENV BAGEL_SECRET="skrJe+WcTH0VNh8DYvrKVZQzobu39J68cRfDlg86jtls3ClwD2KC59aGB2lCH1JX"
+ENV GEOAPI_KEY=A"IzaSyDYFpYoXsylJPkimr3IjKvUlgnGiXNNX98"
+# install mix dependencies
+COPY mix.exs mix.lock ./
+COPY config config
+RUN mix do deps.get, deps.compile
 
-# This step installs all the build tools we'll need
-RUN apk update && \
-  apk upgrade --no-cache && \
-  apk add --no-cache \
-    nodejs \
-    yarn \
-    git \
-    build-base && \
-  mix local.rebar --force && \
-  mix local.hex --force
+# build assets
+COPY assets/package.json assets/package-lock.json ./assets/
+RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
 
-# This copies our app source code into the build container
-COPY . .
+COPY priv priv
+COPY assets assets
+RUN npm run --prefix ./assets deploy
+RUN mix phx.digest
 
-RUN mix do deps.get, deps.compile, compile
+# compile and build release
+COPY lib lib
+# uncomment COPY if rel/ exists
+# COPY rel rel
+RUN mix do compile, release
 
-# This step builds assets for the Phoenix app (if there is one)
-# If you aren't building a Phoenix app, pass `--build-arg SKIP_PHOENIX=true`
-# This is mostly here for demonstration purposes
-RUN if [ ! "$SKIP_PHOENIX" = "true" ]; then \
-  cd ${PHOENIX_SUBDIR}/assets && \
-  yarn install && \
-  yarn deploy && \
-  cd - && \
-  mix phx.digest; \
-fi
+# prepare release image
+FROM alpine:3.9 AS app
+RUN apk add --no-cache openssl ncurses-libs
 
-RUN \
-  mkdir -p /opt/built && \
-  mix distillery.release --verbose && \
-  cp _build/${MIX_ENV}/rel/${APP_NAME}/releases/${APP_VSN}/${APP_NAME}.tar.gz /opt/built && \
-  cd /opt/built && \
-  tar -xzf ${APP_NAME}.tar.gz && \
-  rm ${APP_NAME}.tar.gz
+WORKDIR /app
 
-# From this line onwards, we're in a new image, which will be the image used in production
-FROM alpine:${ALPINE_VERSION}
+RUN chown nobody:nobody /app
 
-# The name of your application/release (required)
-ARG APP_NAME
+USER nobody:nobody
 
-RUN apk update && \
-    apk add --no-cache \
-      bash \
-      openssl-dev
+COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/bagel_tracker ./
 
-ENV REPLACE_OS_VARS=true \
-    APP_NAME=${APP_NAME}
+ENV HOME=/app
 
-WORKDIR /opt/app
-
-COPY --from=builder /opt/built .
-
-CMD trap 'exit' INT; /opt/app/bin/${APP_NAME} foreground
+CMD ["bin/bagel_tracker", "start"]

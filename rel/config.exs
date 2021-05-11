@@ -10,7 +10,7 @@
 use Distillery.Releases.Config,
     # This sets the default release built by `mix distillery.release`
     default_release: :default,
-    # This sets the default environment used by `mix distillery.release`
+      # This sets the default environment used by `mix distillery.release`
     default_environment: Mix.env()
 
 # For a full list of config options for both releases
@@ -49,7 +49,13 @@ end
 release :bagel_tracker do
   set version: current_version(:bagel_tracker)
   set applications: [
-    :runtime_tools
-  ]
+        :runtime_tools
+      ]
+  set config_providers: [
+        {Distillery.Releases.Config.Providers.Elixir, ["${RELEASE_ROOT_DIR}/etc/config.exs"]}
+      ]
+  set overlays: [
+        {:copy, "rel/config/config.exs", "etc/config.exs"}
+      ]
 end
 
