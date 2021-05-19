@@ -1,53 +1,12 @@
-<section>
-    <div class="row">
-        <div class="col s12 m4">
-            <h5>What is this Bagel Radio?</h5>
-            <p>
-                <a href="http://somafm.com/bagel/" target="_blank">Bagel Radio</a> is a station on <a
-                    href="http://somafm.com" target="_blank">Soma FM</a> playing a mix of old school and cutting edge
-                alternative music. <a href="https://twitter.com/bagel_somafm?lang=en" target="_blank">Music director
-                Ted</a> hosts two live shows each week while listeners gather <a
-                    href="https://internet-radio-slack.herokuapp.com" target="_blank">on Slack</a> to discuss the latest
-                musical shenanigans.
-            </p>
-        </div>
-        <div class="col s12 m4">
-            <h5>What is this site?</h5>
-            <p>
-                Listeners of <a href="http://somafm.com/bagel/ " target="_blank">Bagel Radio</a> tend to be huge fans of
-                sometimes obscure bands. In many cases, it's very easy to miss Bagel bands coming through your town.
-                This tool lets you know when bands are coming to your area!</p>
-        </div>
-        <div class="col s12 m4">
-            <h5>How do I use this site?</h5>
-            <p>Simply enter some geographical data (city and state, zip code, etc) and the distance you're willing to
-                travel, and we'll provide a concert listing worthy of a serious music nerd.</p>
-        </div>
-    </div>
-</section>
-<div class="divider"></div>
-<section>
-    <div class="row">
-        <%= form_for @conn, Routes.page_path(@conn, :process_search), [name: :search], fn f -> %>
-        <div class="row">
-            <div class="input-field col s12 m6">
-                <%= text_input f, :location, [required: ""] %>
-                <label for="first_name">Location</label>
-            </div>
-            <div class="input-field col s6 m3">
-                <%= select f, :range, [10, 25, 50, 75, 100, 250] %>
-                <label>Select Distance in Miles</label>
-            </div>
-            <div class="input-field col s6 m3">
-                <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                    <i class="fas fa-caret-square-right"></i>
-                </button>
-            </div>
-        </div>
-        <% end %>
-    </div>
-</section>
-<div class="row">
+<div class="shadow-xl">
+
+<div class="grid px-8 py-4 md:py-4 bg-gray-50 grid-cols-1  md:grid-cols-2">
+    <div class=""><%= render "_site_info.html"  %></div>
+    <div><%= render "_search_form.html", conn: @conn, stats: @stats %></div>
+</div>
+
+
+<div>
     <%= if assigns[:events] && length(@events) == 0 do %>
     <h5>Sorry, there were no results for your area.</h5>
     <% end %>
@@ -81,35 +40,5 @@
     </ul>
     <% end %>
 </div>
-
-<footer class="page-footer">
-    <div class="container">
-        <div class="row">
-            <div class="col l6 s12">
-                <h5 class="white-text">Technology Enlisted</h5>
-                <p class="grey-text text-lighten-4">This site was built using the following technologies</p>
-            </div>
-            <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <ul>
-                    <li><a class="grey-text text-lighten-3" href="https://www.bandsintown.com" target="_blank">Bands in
-                        Town</a></li>
-                    <li><a class="grey-text text-lighten-3" href="https://phoenixframework.org" target="_blank">Phoenix
-                        Web Framework</a></li>
-                    <li><a class="grey-text text-lighten-3" href="https://elixir-lang.org" target="_blank">Elixir
-                        Programming Language</a></li>
-                    <li><a class="grey-text text-lighten-3" href="http://www.wolfram.com/mathematica/?source=nav"
-                           target="_blank">Mathematica/Wolfram Langauge</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="footer-copyright">
-        <div class="container">
-            © 2019 Bagel Concert Finder
-            <%= for stat <- @stats do %>
-            <span class="grey-text text-lighten-4 right" href="#!"> <%= stat.name %>: <%= stat.value %>&nbsp;</span>
-            <%= end %>
-        </div>
-    </div>
-</footer>
+<%= render "_footer.html" %>
+</div>

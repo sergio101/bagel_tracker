@@ -1,0 +1,26 @@
+<section class="ml-2 pr-3 md:border-r-2">
+        <div class="">
+            <h2 class="mb-2 text-lg md:text-2xl font-semibold">What is this Bagel Radio?</h2>
+            <div class="text-gray-700">
+                <a class="hover:underline font-bold text-gray-500" href="http://somafm.com/bagel/" target="_blank">Bagel Radio</a> is a station on <a
+                    href="http://somafm.com" target="_blank">Soma FM</a> playing a mix of old school and cutting edge
+                alternative music. <a class="hover:underline font-bold text-gray-500" href="https://twitter.com/bagel_somafm?lang=en" target="_blank">Music director
+                Ted</a> hosts two live shows each week while listeners gather <a class="hover:underline font-bold text-gray-500"
+                    href="https://internet-radio-slack.herokuapp.com" target="_blank">on Slack</a> to discuss the latest
+                musical shenanigans.
+            </div>
+        </div>
+        <div class="mt-2">
+            <h2 class="text-xl md:text-2xl font-semibold mb-2">What is this site?</h2>
+            <div class="text-gray-700">
+                Listeners of <a class="hover:underline font-bold text-gray-500" href="http://somafm.com/bagel/ " target="_blank">Bagel Radio</a> tend to be huge fans of
+                sometimes obscure bands. In many cases, it's very easy to miss Bagel bands coming through your town.
+                This tool lets you know when bands are coming to your area!</div>
+        </div>
+        <div class="mt-2">
+            <h2 class="text-xl md:text-2xl font-semibold mb-2">How do I use this site?</h2>
+            <div class="text-gray-700">Simply enter some geographical data (city and state, zip code, etc) and the distance you're willing to
+                travel, and we'll provide a concert listing worthy of a serious music nerd.</div>
+        </div>
+
+</section>

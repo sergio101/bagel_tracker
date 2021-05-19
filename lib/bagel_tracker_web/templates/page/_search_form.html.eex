@@ -1,0 +1,26 @@
+<section class="md:px-2">
+
+<h2 class="mb-2 text-2xl font-semibold mt-8 md:mt-0">Find Concerts in your area now!</h2>
+        <%= form_for @conn, Routes.page_path(@conn, :process_search), [name: :search], fn f -> %>
+
+            <div class="mt-4">
+                <%= text_input f, :location, [required: "", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder: "Enter your city or Zip Code"] %>
+            </div>
+            <div class="mt-4" >
+            <label class="text-gray-500 pr-4">Select Distance in Miles</label>
+                <%= select f, :range, [10, 25, 50, 75, 100, 250], [class: "block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"] %>
+
+            </div>
+            <div class="mt-8 text-right">
+                <button class="bg-gray-500 text-gray-100 text-xl font-bold px-4 py-4 rounded-md hover:bg-gray-600 hover:shadow-xl shadow-md" type="submit" name="action">
+                Find Concerts!
+                </button>
+            </div>
+        <% end %>
+
+        <div class="mt-8">
+        <%= for stat <- @stats do %>
+        <%= render "_stat_card.html", stat: stat %>
+        <% end %>
+        </div>
+</section>

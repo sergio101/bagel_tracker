@@ -51,7 +51,9 @@ defmodule BagelTracker.MixProject do
       {:distance, "~> 0.2.1"},
       {:timex, "~> 3.1"},
       {:google_geocoding_api, "~> 0.1.4"},
-      {:distillery, "~> 2.1"}
+      {:distillery, "~> 2.1"},
+      {:number, "~> 1.0.1"}
+
     ]
   end
 
