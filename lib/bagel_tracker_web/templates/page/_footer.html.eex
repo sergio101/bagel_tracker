@@ -27,7 +27,7 @@
 
     </div>
         <div class="bg-gray-400">
-        <div class="text-right font-semibold text-gray-600 pt-4 pb-4 pr-4 md:pr-2">
+        <div class="text-right font-semibold text-gray-600 pt-4 pb-4 pr-4">
             © 2021 Bagel Concert Finder
         </div>
     </div>
