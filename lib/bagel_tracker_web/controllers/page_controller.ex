@@ -25,6 +25,6 @@ defmodule BagelTrackerWeb.PageController do
     events =
       geo_location
       |> Event.events_for_distance(String.to_integer(range) )
-    render(conn, "index.html", %{events: events, stats: stats})
+    render(conn, "results_view.html", %{events: events, stats: stats})
   end
 end

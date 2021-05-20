@@ -1,0 +1,23 @@
+        <li>
+            <div class="collapsible-header">
+                <%= Enum.join [@event.datetime.year, @event.datetime.month, @event.datetime.day], "/" %>
+                - <%= @event.artist.name %>
+                - <%= @event.venue.name %>
+                - <%= @event.venue.city %>, <%= @event.venue.region %> <a href="<%= @event.url%>" target="_blank"><i
+                    class="material-icons">exit_to_app</i></a>
+            </div>
+            <div class="collapsible-body">
+                <div>
+                    <%= if @event.description do %>
+                    <h6>Description</h6>
+                    <span><%= @event.description %></span>
+                    <% end %>
+                    <h6>Lineup</h6>
+                    <ul>
+                        <%= for band <- @event.lineup do %>
+                        <li><%= band %></li>
+                        <% end %>
+                    </ul>
+                </div>
+            </div>
+        </li>

@@ -1,0 +1,55 @@
+<div class="shadow-xl">
+
+<div class="grid px-8 py-4 md:py-4 bg-gray-50 grid-cols-1  md:grid-cols-2">
+    <div><%= render "_search_form.html", conn: @conn, stats: @stats %></div>
+<div>
+    <%= if assigns[:events] && length(@events) == 0 do %>
+    <h5>Sorry, there were no results for your area.</h5>
+    <% end %>
+    <%= if assigns[:events] do %>
+    <ul class="collapsible ">
+        <%= for event <- @events do %>
+        <%= render "_event_card.html", event: event %>
+        <% end %>
+    </ul>
+    <% end %>
+</div>
+</div>
+
+
+<div>
+    <%= if assigns[:events] && length(@events) == 0 do %>
+    <h5>Sorry, there were no results for your area.</h5>
+    <% end %>
+    <%= if assigns[:events] do %>
+    <ul class="collapsible ">
+        <%= for event <- @events do %>
+        <li>
+            <div class="collapsible-header">
+                <%= Enum.join [event.datetime.year, event.datetime.month, event.datetime.day], "/" %>
+                - <%= event.artist.name %>
+                - <%= event.venue.name %>
+                - <%= event.venue.city %>, <%= event.venue.region %> <a href="<%= event.url%>" target="_blank"><i
+                    class="material-icons">exit_to_app</i></a>
+            </div>
+            <div class="collapsible-body">
+                <div>
+                    <%= if event.description do %>
+                    <h6>Description</h6>
+                    <span><%= event.description %></span>
+                    <% end %>
+                    <h6>Lineup</h6>
+                    <ul>
+                        <%= for band <- event.lineup do %>
+                        <li><%= band %></li>
+                        <% end %>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <% end %>
+    </ul>
+    <% end %>
+</div>
+<%= render "_footer.html" %>
+</div>
