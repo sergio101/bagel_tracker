@@ -19,6 +19,7 @@ defmodule BagelTrackerWeb.Router do
     get "/", PageController, :index
     post "/process_search", PageController, :process_search
     get "/fetch_concerts/:location/:range", PageController, :fetch_concerts
+    get "/test_locations", PageController, :test_locations
   end
 
   # Other scopes may use custom stacks.

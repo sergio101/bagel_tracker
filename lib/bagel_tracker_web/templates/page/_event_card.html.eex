@@ -1,23 +1,22 @@
-        <li>
-            <div class="collapsible-header">
-                <%= Enum.join [@event.datetime.year, @event.datetime.month, @event.datetime.day], "/" %>
-                - <%= @event.artist.name %>
-                - <%= @event.venue.name %>
-                - <%= @event.venue.city %>, <%= @event.venue.region %> <a href="<%= @event.url%>" target="_blank"><i
-                    class="material-icons">exit_to_app</i></a>
-            </div>
-            <div class="collapsible-body">
-                <div>
-                    <%= if @event.description do %>
-                    <h6>Description</h6>
-                    <span><%= @event.description %></span>
-                    <% end %>
-                    <h6>Lineup</h6>
-                    <ul>
-                        <%= for band <- @event.lineup do %>
-                        <li><%= band %></li>
-                        <% end %>
-                    </ul>
-                </div>
-            </div>
-        </li>
+<div class=" bg-gray-200 border-gray-200 p-4 shadow-md rounded-lg mb-4 mr-4 sm:w-60  inline-block">
+  <div>
+    <img class="w-full shadow-sm" src="<%= @event.artist.image_url %>" alt="">
+  </div>
+  <div class="mt-4">
+    <h3 class="text-xl font-semibold mt-2 text-gray-700" ><%= @event.artist.name %></h3>
+    <p class="italic text-md text-gray-500"><%= Enum.join [@event.datetime.month, @event.datetime.day, @event.datetime.year], "/" %> </p>
+    <p class="text-gray-700 mt-2">
+      <%= @event.venue.name %>, <%= @event.venue.city %>, <%= @event.venue.region %>
+      <a href="<%= @event.url%>" target="_blank"><i class="pr-2 fas fa-external-link-alt"></i></a>
+    </p>
+    <% lineup_string = @event.lineup |> Enum.intersperse(", ") |> List.to_string()  %>
+    <p class="mt-2 text-gray-500"><span class="text-gray-600 text-sm">Lineup</span> <%= @event.lineup |> Enum.intersperse(", ") |> List.to_string() |> String.slice(0..64) %>
+      <%= if String.length(lineup_string) > 64 do %> ... <a class="italic" href="<%= @event.url%>" target="_blank">More info <i class="pr-2 fas fa-external-link-alt fa-xs"></i></a> <% end %>
+    </p>
+    <%= if @event.description do %>
+      <p class="text-gray-500 mt-2"><span class="text-gray-700 text-sm">Details</span> <%= @event.description |> String.slice(0..64) %>
+      <%= if String.length(@event.description) > 64 do  %>... <a class="italic" href="<%= @event.url%>" target="_blank">More info <i class="pr-2 fas fa-external-link-alt fa-xs"></i></a> <% end %>
+      </p>
+    <% end %>
+  </div>
+</div>

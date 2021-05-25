@@ -5,6 +5,7 @@ defmodule BagelTrackerWeb.PageController do
   alias BagelTracker.GeoLocation
   alias BagelTracker.Repo
   alias BagelTracker.Statistic
+  import Ecto.Query
 
   def index(conn, params) do
     stats = Repo.all(Statistic)
@@ -26,5 +27,9 @@ defmodule BagelTrackerWeb.PageController do
       geo_location
       |> Event.events_for_distance(String.to_integer(range) )
     render(conn, "results_view.html", %{events: events, stats: stats})
+  end
+
+  def test_locations(conn, _params) do
+    render(conn, "results_view.html", %{events: Event.get_last_n(20), stats: Repo.all(Statistic)})
   end
 end

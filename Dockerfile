@@ -1,4 +1,4 @@
-FROM elixir:1.9.0-alpine AS build
+FROM hexpm/elixir:1.11.4-erlang-22.2.8-alpine-3.11.3 AS build
 
 # install build dependencies
 RUN apk add --no-cache build-base npm git python
@@ -28,8 +28,11 @@ RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
 
 COPY priv priv
 COPY assets assets
+
 RUN npm run --prefix ./assets deploy
 RUN mix phx.digest
+
+COPY assets assets
 
 # compile and build release
 COPY lib lib

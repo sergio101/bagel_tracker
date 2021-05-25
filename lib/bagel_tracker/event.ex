@@ -87,5 +87,8 @@ defmodule BagelTracker.Event do
        <= radius * 1609.34 end)
   end
 
-
+  def get_last_n(n) do
+    query = from e in Event, limit: ^n, preload: [:artist, :venue]
+    Repo.all(query)
+  end
 end
