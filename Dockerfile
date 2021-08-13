@@ -28,14 +28,13 @@ RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
 
 COPY priv priv
 COPY assets assets
+COPY lib lib
 
 RUN npm run --prefix ./assets deploy
 RUN mix phx.digest
 
-COPY assets assets
-
 # compile and build release
-COPY lib lib
+
 # uncomment COPY if rel/ exists
 # COPY rel rel
 RUN mix do compile, release
