@@ -1,13 +1,5 @@
 # BagelTracker
 
-To start your Phoenix server:
+## Crontab Daily
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
-
-
-# To deploy
-- `npm run --prefix ./assets deploy`
-- `mix phx.digest`
+@daily cd "/home/bandtracker/deployed_application/bagel_tracker/"; MIX_ENV=prod mix run -e UpdateSiteData.start_data_update
