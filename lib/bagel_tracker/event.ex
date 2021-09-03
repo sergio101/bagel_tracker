@@ -34,7 +34,6 @@ defmodule BagelTracker.Event do
   """
   def import_new_events(artist_name) do
     remote_event = BandsInTownAPI.fetch_event_info(artist_name)
-    IO.inspect remote_event
     case remote_event do
       {:ok, %{errorMessage: errorMessage}} -> IO.puts "There were errors"
       {:error, errors} -> IO.puts "There were errors"
@@ -65,7 +64,6 @@ defmodule BagelTracker.Event do
 
   def add_venue(event, new_event) do
     venue_data = event.venue
-#    data = %{venue_data | longitude: string_to_float(venue_data[:longitude]), latitude: string_to_float(venue_data[:latitude]) }
     data = venue_data
            |> Map.put(:longitude, string_to_float(venue_data[:longitude]))
            |> Map.put(:latitude, string_to_float(venue_data[:latitude]))

@@ -30,7 +30,7 @@ defmodule BagelTracker.FetchRemoteData do
     case RawDataEntry.find_by_hash(hash) do
       [] -> BagelTracker.Repo.insert(%RawDataEntry{hash: hash,
         fetched_date: NaiveDateTime.truncate(NaiveDateTime.utc_now, :second),
-        raw_data: List.to_string(body_data)}) #  |> process_html_data |> parse_data_list
+        raw_data: List.to_string(body_data)}) 
       _ -> {:ok, :record_exists}
     end
   end
