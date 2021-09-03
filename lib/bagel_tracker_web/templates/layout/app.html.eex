@@ -24,7 +24,7 @@
       <section>
   <nav class="max-w-4xl mx-auto bg-gray-500 px-8 py-2 grid grid-cols-2 align-top">
     <div class="">
-      <a href="/" class="text-gray-100 font-semibold text-xl md:text-3xl">Bagel Radio Concert Finder</a>
+      <a href="/" class="text-gray-100 font-semibold text-xl md:text-3xl">BAGeL Radio Concert Finder</a>
     </div>
     <div class="text-right md:visible invisible">
     <span class="px-2 text-gray-100 hover:underline" ><a href="https://www.amazon.com/hz/wishlist/ls/3L7DM7FMR5OQU?ref_=wl_share" target="_blank">Amazon Wish List</a></span>
