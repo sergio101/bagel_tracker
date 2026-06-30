@@ -21,12 +21,8 @@ defmodule UpdateSiteData do
     First, Gather up the raw data that has not been processed yet.
   """
   def start_data_update() do
-    FetchRemoteData.fetch_data()
-    case Repo.all(from(r in RawDataEntry, where: is_nil(r.processed_date))) do
-      [] -> {:ok, :no_data_to_update}
-      items -> process_data_entries(items)
-    end
     IO.puts "Starting second phase of updates"
+    BagelTracker.Artist.process_new_artists()
     BagelTracker.Artist.check_remote_data()
     BagelTracker.Event.import_remote_events()
     BagelTracker.Statistic.update_counts();

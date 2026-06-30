@@ -8,6 +8,21 @@ defmodule BagelTracker.FetchRemoteData do
   alias BagelTracker.RawDataEntry
 
   @doc """
+    Reads the bagel_radio_band_list.txt file and returns its contents as a list of strings,
+    with each line representing a band name.
+  """
+  def read_band_list_file do
+    case File.read("bagel_radio_band_list.txt") do
+      {:ok, content} ->
+        String.split(content, "\n", trim: true)
+
+      {:error, reason} ->
+        IO.puts("Error reading band list file: #{reason}")
+        []
+    end
+  end
+
+  @doc """
    Runs all functions and returns the list of tuples
   """
   def fetch_data() do

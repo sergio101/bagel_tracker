@@ -7,6 +7,7 @@ defmodule BagelTracker.Artist do
   alias BagelTracker.Repo
   alias BagelTracker.Artist
   alias BagelTracker.Event
+  alias BagelTracker.FetchRemoteData
 
   schema "artists" do
     field :bit_id, :string
@@ -24,6 +25,14 @@ defmodule BagelTracker.Artist do
   end
 
   @doc """
+    Finds new artists and adds them to the database
+"""
+  def process_new_artists do
+    FetchRemoteData.read_band_list_file()
+    |> BagelTracker.ProcessRemoteData.update_artists()
+
+  end
+  @doc """
     This is where we store the artists
   """
     def changeset(artist, attrs) do
@@ -37,15 +46,19 @@ defmodule BagelTracker.Artist do
 
   def find_or_create_by_name(artist_name) do
     name = String.trim(artist_name)
-    query = from(a in Artist, where: a.name == ^name )
+
+    # Use ilike for case-insensitive matching
+    query = from(a in Artist, where: fragment("lower(?)", a.name) == fragment("lower(?)", ^name))
+
     case Repo.all(query) do
       [] -> Repo.insert(%Artist{name: name})
-      _ -> {:ok, :data_exists}
+      [artist | _] -> {:ok, :data_exists}
     end
   end
 
+
   @doc """
-  This is the entry point of hte function. This will update any artist that do not
+  This is the entry point of the function. This will update any artist that do not
   have any BIT info.
   """
 
@@ -70,8 +83,17 @@ defmodule BagelTracker.Artist do
     Gets artists that have an entry in the database. This assures that they exists.
   """
   def get_active_artists do
-    query = from(a in "artists", where: not(is_nil(a.bit_id)))
-    Repo.all(query)
+    query = from a in BagelTracker.Artist,
+                 where: not is_nil(a.bit_id)
+
+    BagelTracker.Repo.all(query)
+
+  end
+
+  def update_artists(data_list) do
+    for entry <- data_list do
+      Artist.find_or_create_by_name(entry)
+    end
   end
 
 end

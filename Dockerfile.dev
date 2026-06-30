@@ -1,0 +1,21 @@
+FROM bitwalker/alpine-elixir-phoenix:latest
+
+ARG ENVIRONMENT=dev
+ENV ENVIRONMENT ${ENVIRONMENT}
+ENV MIX_ENV ${ENVIRONMENT}
+
+RUN apk update && \
+    apk upgrade
+
+WORKDIR /app
+
+COPY mix.exs .
+COPY mix.lock .
+
+RUN mix deps.get
+RUN mix deps.compile
+
+COPY . /app
+
+EXPOSE 4000
+CMD MIX_ENV=$ENVIRONMENT iex -S mix

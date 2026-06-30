@@ -71,5 +71,5 @@ config :bagel_tracker, BagelTracker.Repo,
   username: "postgres",
   password: "postgres",
   database: "bagel_tracker_dev",
-  hostname: "localhost",
+  hostname: "0.0.0.0",
   pool_size: 10

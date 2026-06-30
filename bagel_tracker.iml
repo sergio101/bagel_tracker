@@ -143,6 +143,11 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/phoenix_ecto" />
       <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/phoenix_html" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/number" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/prod/lib/number" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/websock_adapter" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/phoenix_template" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/castore" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/websock" />
     </content>
     <orderEntry type="jdk" jdkName="Elixir 1.11.2" jdkType="Elixir SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -218,5 +223,21 @@
     <orderEntry type="library" name="eqc_ex" level="project" />
     <orderEntry type="library" name="ex_unit_clustered_case" level="project" />
     <orderEntry type="library" name="dialyzex" level="project" />
+    <orderEntry type="library" name="number" level="project" />
+    <orderEntry type="library" name="myxql" level="project" />
+    <orderEntry type="library" name="tds" level="project" />
+    <orderEntry type="library" name="phoenix_template" level="project" />
+    <orderEntry type="library" name="websock_adapter" level="project" />
+    <orderEntry type="library" name="phoenix_view" level="project" />
+    <orderEntry type="library" name="castore" level="project" />
+    <orderEntry type="library" name="makeup_eex" level="project" />
+    <orderEntry type="library" name="makeup_diff" level="project" />
+    <orderEntry type="library" name="phx_new" level="project" />
+    <orderEntry type="library" name="mint" level="project" />
+    <orderEntry type="library" name="mint_web_socket" level="project" />
+    <orderEntry type="library" name="esbuild" level="project" />
+    <orderEntry type="library" name="websock" level="project" />
+    <orderEntry type="library" name="bandit" level="project" />
+    <orderEntry type="library" name="table" level="project" />
   </component>
 </module>

@@ -14,8 +14,7 @@ defmodule BagelTracker.ProcessRemoteData do
 
   def update_artists(data_list) do
     for entry <- data_list do
-      {artist_name, play_count} = entry
-      Artist.find_or_create_by_name(artist_name)
+      Artist.find_or_create_by_name(entry)
     end
   end
 

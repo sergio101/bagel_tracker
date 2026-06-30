@@ -3,7 +3,7 @@ defmodule BandsInTownAPI do
     This is a Bands in Town API
   """
 
-  @api_key  System.get_env("BIT_KEY")
+  @api_key  "51fbb96b1e0a3466197c51b74bc89eac"
   @rest_url "https://rest.bandsintown.com"
 
   @doc"""

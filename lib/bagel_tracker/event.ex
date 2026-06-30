@@ -15,8 +15,9 @@ defmodule BagelTracker.Event do
     field :description, :string
     field :lineup, {:array, :string}
     field :url, :string
+    field :is_active, :boolean
     belongs_to :artist, Artist
-    has_one :venue, BagelTracker.Venue
+    has_one :venue, BagelTracker.Venue, on_delete: :delete_all
 
     timestamps()
   end
@@ -24,7 +25,7 @@ defmodule BagelTracker.Event do
   @doc false
   def changeset(event, attrs) do
     event
-    |> cast(attrs, [:artist_id, :datetime, :description, :bitid, :lineup, :url])
+    |> cast(attrs, [:artist_id, :datetime, :description, :bitid, :lineup, :url, :is_active])
     |> validate_required([:artist_id, :datetime, :bitid, :lineup, :url])
     |> unique_constraint(:bitid, name: :events_bitid_index)
   end
@@ -45,12 +46,11 @@ defmodule BagelTracker.Event do
     for event <- remote_events do
       artist_id = Repo.one(from a in Artist, select: a.id, where: a.bit_id == ^event.artist_id)
       {:ok, date_time} =  NaiveDateTime.from_iso8601(event.datetime)
-      data_struct = %{ event | artist_id: artist_id, datetime: date_time, id: nil} |> Map.put(:bitid, event.id)
+      data_struct = %{ event | artist_id: artist_id, datetime: date_time, id: nil} |> Map.put(:bitid, event.id) |>  Map.put(:is_active, false)
       changeset = changeset(%Event{},data_struct)
-      IO.inspect changeset
       case Repo.insert(changeset) do
         {:ok, new_event } -> add_venue(data_struct, new_event)
-        {:error, error } -> {:error, :could_not_insert}
+        {:error, error } -> IO.puts "there was an error: #{inspect(error)}"
       end
     end
   end
@@ -60,6 +60,8 @@ defmodule BagelTracker.Event do
     for artist_name <- artist_names do
       import_new_events(artist_name)
     end
+    toggle_is_active_for_all()
+    delete_inactive_events()
   end
 
   def add_venue(event, new_event) do
@@ -76,7 +78,7 @@ defmodule BagelTracker.Event do
   end
 
   def events_for_distance(geo_point, radius) do
-     query = from(e in Event, where: e.datetime > ^(Timex.now |> Timex.shift(days: -1)), preload: [:venue, :artist], order_by: e.datetime )
+     query = from(e in Event, where: e.datetime > ^(Timex.now |> Timex.shift(days: -1)) and e.is_active == true, preload: [:venue, :artist], order_by: e.datetime )
      events = Repo.all(query)
      Enum.filter(events, fn(x) ->
        Distance.GreatCircle.distance(
@@ -86,7 +88,29 @@ defmodule BagelTracker.Event do
   end
 
   def get_last_n(n) do
-    query = from e in Event, limit: ^n, preload: [:artist, :venue]
+    query = from e in Event, where: e.is_active == true, limit: ^n, preload: [:artist, :venue]
     Repo.all(query)
   end
+
+  def set_active_to_true(event) do
+    changeset(event, %{is_active: true})
+    |> Repo.update!()
+  end
+
+  def toggle_is_active(event) do
+    changeset(event, %{is_active: !event.is_active })
+    |> Repo.update!()
+  end
+
+  def toggle_is_active_for_all() do
+    Repo.all(Event) |> Enum.each(&(toggle_is_active(&1)))
+  end
+
+  def delete_inactive_events() do
+    query = from e in Event, where: e.is_active == false
+    Repo.all(query) |> Enum.each(&Repo.delete(&1))
+  end
+
+  def get_event(id), do: Repo.get!(Event, id)
+
 end
