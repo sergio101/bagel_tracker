@@ -70,12 +70,22 @@ defmodule BagelTracker.Artist do
   end
 
   def update_artist(artist) do
-    {:ok, artist_info} = BandsInTownAPI.fetch_artist_info(artist.name)
-    case  artist_info do
+    case BandsInTownAPI.fetch_artist_info(artist.name) do
+      {:ok, %{error: "Not Found"}} -> {:ok, :artist_doesnt_exist}
+      {:ok, ""} -> {:ok, :blank_returned}
+      {:ok, %{id: bit_id} = artist_info} -> assign_bit_info(artist, to_string(bit_id), artist_info)
+      other -> {:error, other}
+    end
+  end
 
-      %{error: "Not Found"} -> {:ok, :artist_doesnt_exist}
-      "" -> {:ok, :blank_returned}
-      artist_info -> Repo.update(changeset(artist,  artist_info |> Map.put(:bit_id, artist_info.id)))
+  # Different band-list names can resolve to the same BIT artist
+  # (e.g. "see night" / "SEE NIGHT"). Only the first one gets the bit_id.
+  defp assign_bit_info(artist, bit_id, artist_info) do
+    if Repo.exists?(from a in Artist, where: a.bit_id == ^bit_id and a.id != ^artist.id) do
+      IO.puts "Skipping #{artist.name}: bit_id #{bit_id} already belongs to another artist"
+      {:ok, :duplicate_bit_id}
+    else
+      Repo.update(changeset(artist, Map.put(artist_info, :bit_id, bit_id)))
     end
   end
 

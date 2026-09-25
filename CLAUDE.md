@@ -42,6 +42,21 @@ docker tag bagel-tracker:latest registry.digitalocean.com/docker-apps/bagel-trac
 docker push registry.digitalocean.com/docker-apps/bagel-tracker:latest
 ```
 
+Cron (production) runs the full pipeline daily: `MIX_ENV=prod mix run -e UpdateSiteData.start_data_update`.
+
+## Pulling production data into local dev
+
+Requires `BAGEL_DB_PASSWORD` and PostgreSQL 16 client tools (`brew install postgresql@16`):
+
+```bash
+PGPASSWORD="<bagel_db_password>" PGSSLMODE=require /opt/homebrew/opt/postgresql@16/bin/pg_dump \
+  -h db-postgresql-nyc3-53985-do-user-1826027-0.b.db.ondigitalocean.com -p 25060 \
+  -U concert_finder -d bagel_tracker_prod --no-privileges --no-owner -c > datadump.sql
+
+docker exec postgresqldb psql -U postgres -c 'CREATE DATABASE bagel_tracker_dev;'  # if it doesn't exist
+psql -U postgres -h 127.0.0.1 -d bagel_tracker_dev < datadump.sql
+```
+
 ## Data pipeline
 
 The full data refresh pipeline is triggered manually or via cron:
@@ -63,7 +78,7 @@ BagelTracker.Statistic.update_counts()      # refreshes artist/event count stats
   - `ProcessRemoteData` — parses raw HTML into `{artist, play_count}` tuples; upserts `Artist` records
   - `BandsInTownAPI` — wraps the Bands in Town REST API (artist info + events); API key is hardcoded
   - `Artist` — Ecto schema; `check_remote_data/0` fills in BIT metadata for artists missing `bit_id`
-  - `Event` — Ecto schema; `import_remote_events/0` fetches, inserts, and prunes stale events using an `is_active` toggle pattern
+  - `Event` — Ecto schema; `import_remote_events/0` fetches, stages, and swaps in fresh events using `is_active` (see below)
   - `Venue` — belongs to Event (one-to-one); stores lat/lng for distance filtering
   - `GeoLocation` — logs user search locations (via Google Geocoding API)
   - `Statistic` — simple key/value counts updated after each pipeline run
@@ -77,16 +92,21 @@ BagelTracker.Statistic.update_counts()      # refreshes artist/event count stats
 
 ```
 Artist -< Event >- Venue
-Event.is_active: toggled false on each import run; events still false after re-import are deleted (stale event pruning)
+Artist.bit_id: unique (different band-list names can resolve to the same BIT artist; only the first gets the bit_id)
+Event.is_active: false = staged by an in-progress import, true = live on the site
 ```
 
-## Event staleness pattern
+## Event import (staged swap)
 
-`import_remote_events/0` works in three passes: insert new events → `toggle_is_active_for_all` (flips every event) → `delete_inactive_events`. Events that were re-fetched get toggled twice (false → true), events not re-fetched stay false and are deleted.
+`import_remote_events/0`: delete leftover inactive events (from a crashed run) → insert every artist's events with `is_active: false` (a failure for one artist is logged and skipped) → in one transaction, delete the old active events + their venues and flip the staged ones to active. A crash mid-run leaves the previous data live.
 
 ## External dependencies
 
 - **Bands in Town API** — API key hardcoded in `BandsInTownAPI` (`@api_key`)
-- **Google Geocoding API** — key configured via `google_geocoding_api` config
+- **Google Geocoding API** — the `google_geocoding_api` hex dep (module `GoogleGeocodingApi`, used by `PageController`), key configured via `config :google_geocoding_api` in `config/config.exs`. Note: `lib/bagel_tracker/geo_code_a_p_i.ex` (module `GeoCodeAPI`, reads `GEOAPI_KEY` env var) is a separate, unused implementation of the same idea — don't confuse the two.
 - **SomaFM** — `http://somafm.com/bagel/allartists.inc` (plain HTTP, parsed with Floki)
 - **`bagel_radio_band_list.txt`** — local file listing band names; read by `FetchRemoteData.read_band_list_file/0`
+
+## Dead code
+
+- `BagelTracker.Offer` (schema + `offers` migration) has no references anywhere else in the app — likely vestigial.

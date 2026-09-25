@@ -44,7 +44,7 @@ defmodule BagelTracker.Event do
 
   def process_remote_events(remote_events) do
     for event <- remote_events do
-      artist_id = Repo.one(from a in Artist, select: a.id, where: a.bit_id == ^event.artist_id)
+      artist_id = Repo.one(from a in Artist, select: a.id, where: a.bit_id == ^to_string(event.artist_id), limit: 1)
       {:ok, date_time} =  NaiveDateTime.from_iso8601(event.datetime)
       data_struct = %{ event | artist_id: artist_id, datetime: date_time, id: nil} |> Map.put(:bitid, event.id) |>  Map.put(:is_active, false)
       changeset = changeset(%Event{},data_struct)
@@ -55,13 +55,38 @@ defmodule BagelTracker.Event do
     end
   end
 
+  @doc """
+    Imports fresh events for every artist, then swaps them in for the current ones.
+
+    New events are inserted with is_active = false. Only once every artist has been
+    processed are the old (active) events deleted and the new ones activated, in a
+    single transaction. If the run dies partway, the site keeps showing the previous
+    data, and the next run clears the half-imported rows before it starts.
+  """
   def import_remote_events do
+    delete_events_where(false)
+
     artist_names = Repo.all(from(a in Artist, select: a.name, where: not(is_nil(a.bit_id))))
     for artist_name <- artist_names do
-      import_new_events(artist_name)
+      try do
+        import_new_events(artist_name)
+      rescue
+        error -> IO.puts "Failed to import events for #{artist_name}: #{Exception.message(error)}"
+      end
     end
-    toggle_is_active_for_all()
-    delete_inactive_events()
+
+    Repo.transaction(fn ->
+      delete_events_where(true)
+      Repo.update_all(from(e in Event, where: e.is_active == false), set: [is_active: true])
+    end)
+  end
+
+  defp delete_events_where(true), do: delete_events(from e in Event, where: e.is_active == true, select: e.id)
+  defp delete_events_where(false), do: delete_events(from e in Event, where: e.is_active == false or is_nil(e.is_active), select: e.id)
+
+  defp delete_events(event_ids) do
+    Repo.delete_all(from v in Venue, where: v.event_id in subquery(event_ids))
+    Repo.delete_all(from e in Event, where: e.id in subquery(event_ids))
   end
 
   def add_venue(event, new_event) do
@@ -90,25 +115,6 @@ defmodule BagelTracker.Event do
   def get_last_n(n) do
     query = from e in Event, where: e.is_active == true, limit: ^n, preload: [:artist, :venue]
     Repo.all(query)
-  end
-
-  def set_active_to_true(event) do
-    changeset(event, %{is_active: true})
-    |> Repo.update!()
-  end
-
-  def toggle_is_active(event) do
-    changeset(event, %{is_active: !event.is_active })
-    |> Repo.update!()
-  end
-
-  def toggle_is_active_for_all() do
-    Repo.all(Event) |> Enum.each(&(toggle_is_active(&1)))
-  end
-
-  def delete_inactive_events() do
-    query = from e in Event, where: e.is_active == false
-    Repo.all(query) |> Enum.each(&Repo.delete(&1))
   end
 
   def get_event(id), do: Repo.get!(Event, id)
